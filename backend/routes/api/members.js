@@ -1,3 +1,4 @@
+const middlewares = require('middlewares');
 const Member = require('../../models').Member;
 const authConfig = require('../../config/auth_config.json');
 const jwt = require('jsonwebtoken');
@@ -58,9 +59,9 @@ router.post('/authenticate', (req, res, next) => {
 								error: 'Invalid email or password'
 							});
 					} else if (result) {
-						const payload = { member_id: member.id };
+						const payload = { id: member.id };
 						const token = jwt.sign(payload, authConfig.jwt_secret);
-						res.cookie('member_token', token, { httpOnly: true })
+						res.cookie('token', token, { httpOnly: true })
 							.sendStatus(200);
 					}
 				})
@@ -74,6 +75,14 @@ router.post('/authenticate', (req, res, next) => {
 					msg: err.name,
 					error: err
 				});
+		});
+});
+
+router.get('/checkToken', middlewares.authJwt.verifyToken, function(req, res, next) {
+	res.status(200)
+		.json({
+			success: true,
+			msg: 'Valid token'
 		});
 })
 
