@@ -4,9 +4,12 @@ import {
 	Switch,
 	Route
 } from 'react-router-dom';
+import withAuth from './withAuth';
 import Home from './Home';
 import Results from './Results';
 import Register from './pages/Register';
+import Login from './pages/Login';
+import Profile from './pages/Profile';
 
 export default function App() {
 	return (
@@ -18,15 +21,11 @@ export default function App() {
 			  crossOrigin="anonymous"
 			/>
 			<Switch>
-				<Route path='/results/:endpoint/:searchTerm'>
-					<Results />
-				</Route>
-				<Route path='/register'>
-					<Register />
-				</Route>
-				<Route path='/'>
-					<Home />
-				</Route>
+				<Route path='/results/:endpoint/:searchTerm' component={Results} />
+				<Route path='/profile' component={withAuth(Profile)} />
+				<Route path='/register' component={Register} />
+				<Route path='/login' component={Login} />
+				<Route path='/' component={Home} />
 			</Switch>
 		</Router>
 	)	

@@ -42,7 +42,7 @@ router.post('/authenticate', (req, res, next) => {
 				res.status(401)
 					.json({
 						success: false,
-						error: 'Invalid email or password'
+						msg: 'Invalid email or password'
 					});
 			} else if (member) {
 				member.isCorrectPassword(password, (err, result) => {
@@ -57,7 +57,7 @@ router.post('/authenticate', (req, res, next) => {
 						res.status(401)
 							.json({
 								success: false,
-								error: 'Invalid email or password'
+								msg: 'Invalid email or password'
 							});
 					} else if (result) {
 						const payload = { id: member.id };
@@ -84,6 +84,45 @@ router.get('/checkToken', middlewares.authJwt.verifyToken, function(req, res, ne
 		.json({
 			success: true,
 			msg: 'Valid token'
+		});
+});
+
+router.get('/profile', middlewares.authJwt.verifyToken, function(req, res, next) {
+	const token = req.cookies.token;
+	const decoded = jwt.decode(token);
+	if (!(decoded && decoded.id)) {
+		return res.status(401).json({
+			success: false,
+			msg: `Could not decode token ${decoded}`
+		});
+	} 
+	Member.findOne({
+		where: {
+			id: decoded.id
+		}
+	})
+		.then(member => {
+			console.log(member);
+			res.status(200)
+				.json({
+					success: true,
+					member: {
+						id: member.id,
+						name: member.name,
+						email: member.email,
+						mobile: member.mobile,
+						currFine: member.currFine
+					}
+				});
+		})
+		.catch(err => {
+			console.log(err);
+			res.status(500)
+				.json({
+					success: false,
+					msg: err.name,
+					// error: err
+				});
 		});
 })
 

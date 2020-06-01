@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             defaultValue: 'MEMBER'
         },
-        curr_fine: {
+        currFine: {
             type: DataTypes.INTEGER,
             defaultValue: 0
         }

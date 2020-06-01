@@ -5,13 +5,22 @@ const verifyToken = (req, res, next) => {
     const token = req.cookies.token;
     console.log(token);
     if (!token) {
+        console.log('really?');
         return res.status(403)
             .json({
                 msg: "No token provided"
             });
     }
+    console.log('before jwt');
 
-    jwt.verify(token, secret, (err, decoded) => {
+    try {
+        jwt.verify(token, secret);
+        next();
+    } catch(err) {
+        console.log('errored at jwt verify', err);
+    }
+    /*jwt.verify(token, secret, (err, decoded) => {
+        console('kya bro');
         if (err) {
             return res.status(401)
                 .json({
@@ -21,7 +30,7 @@ const verifyToken = (req, res, next) => {
         req.userId = decoded.id;
         console('verified, going next', req.userId)
         next();
-    })
+    })*/
 }
 
 const authJwt = {

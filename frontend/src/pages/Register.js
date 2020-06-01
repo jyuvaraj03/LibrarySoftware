@@ -107,18 +107,15 @@ export default class Register extends Component {
 		delete requestObj.confirmPassword;
 
 		axios.post('/api/members/add', requestObj)
-			.then(function(response) {
+			.then(response => {
 				if (response.data.success) {
-					// TODO: 
-					// Login automatically and redirect to user page
+					this.props.history.push('/login');
 				}
-				console.log(response.data);
-				console.log(response.status);
 			})
-			.catch(function(error) {
+			.catch(error => {
 				console.log(error.response);
 			})
-			.finally(function() {
+			.finally(() => {
 				this.setState({
 					loading: false
 				});
