@@ -1,4 +1,4 @@
-const middlewares = require('middlewares');
+const middlewares = require('../../middlewares');
 const Member = require('../../models').Member;
 const authConfig = require('../../config/auth_config.json');
 const jwt = require('jsonwebtoken');
@@ -7,6 +7,7 @@ const router = express.Router();
 
 router.post('/add', (req, res, next) => {
 	// console.log(req.body);
+	// TODO: perform validation on input before creating entry
 	Member.create(req.body)
 		.then(member => {
 			console.log('created member id', member.id);
@@ -41,7 +42,7 @@ router.post('/authenticate', (req, res, next) => {
 				res.status(401)
 					.json({
 						success: false,
-						error: 'Invalid email oor password'
+						error: 'Invalid email or password'
 					});
 			} else if (member) {
 				member.isCorrectPassword(password, (err, result) => {

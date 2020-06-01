@@ -37,8 +37,8 @@ app.use(function(err, req, res, next) {
 });
 
 models.sequelize.sync(/*{ force: true }*/).then(() => {
-    app.listen(3000, () => {
-        console.log(`App listening on PORT ${3000}`);
+    app.listen(8080, () => {
+        console.log(`App listening on PORT ${8080}`);
     });
 });
 // app.listen(8080);
