@@ -33,8 +33,8 @@ export default class Profile extends Component {
 	}
 
 	render() {
-		const tableRows = Object.entries(this.state.member).map(row => (
-			<tr>
+		const tableRows = Object.entries(this.state.member).map((row, index) => (
+			<tr key={index}>
 				<td>{row[0]}</td>
 				<td>{row[1]}</td>
 			</tr>
