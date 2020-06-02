@@ -11,6 +11,7 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
 import AddBook from './pages/AddBook';
+import Books from './pages/Books'
 
 export default function App() {
 	return (
@@ -24,6 +25,7 @@ export default function App() {
 			<Switch>
 				<Route path='/results/:endpoint/:searchTerm' component={Results} />
 				<Route path='/books/add' component={AddBook} />
+				<Route path='/books' component={Books} />
 				<Route path='/profile' component={withAuth(Profile)} />
 				<Route path='/register' component={Register} />
 				<Route path='/login' component={Login} />
