@@ -87,15 +87,47 @@ router.get('/checkToken', middlewares.authJwt.verifyToken, function(req, res, ne
 		});
 });
 
+router.get('/checkAdmin', middlewares.authJwt.verifyToken, function(req, res, next) {
+	const token = req.cookies.token;
+	const decoded = jwt.decode(token);
+	if (!decoded || !decoded.id) {
+		return res.status(401).json({
+			success: false,
+			msg: `Could not decode token`
+		});
+	}
+	Member.findOne({
+		where: {
+			id: decoded.id
+		}
+	})
+		.then(member => {
+			console.log(member);
+			res.status(200)
+				.json({
+					success: true
+					isAdmin: member.role === 'ADMIN'
+				});
+		})
+		.catch(err => {
+			console.log(err);
+			res.status(500)
+				.json({
+					success: false,
+					msg: err.name
+				});
+		});
+});
+
 router.get('/profile', middlewares.authJwt.verifyToken, function(req, res, next) {
 	const token = req.cookies.token;
 	const decoded = jwt.decode(token);
-	if (!(decoded && decoded.id)) {
+	if (!decoded || !decoded.id) {
 		return res.status(401).json({
 			success: false,
-			msg: `Could not decode token ${decoded}`
+			msg: `Could not decode token`
 		});
-	} 
+	}
 	Member.findOne({
 		where: {
 			id: decoded.id
@@ -111,6 +143,7 @@ router.get('/profile', middlewares.authJwt.verifyToken, function(req, res, next)
 						name: member.name,
 						email: member.email,
 						mobile: member.mobile,
+						role: member.role,
 						currFine: member.currFine
 					}
 				});
@@ -124,6 +157,6 @@ router.get('/profile', middlewares.authJwt.verifyToken, function(req, res, next)
 					// error: err
 				});
 		});
-})
+});
 
 module.exports = router;
