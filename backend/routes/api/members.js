@@ -105,7 +105,7 @@ router.get('/checkAdmin', middlewares.authJwt.verifyToken, function(req, res, ne
 			console.log(member);
 			res.status(200)
 				.json({
-					success: true
+					success: true,
 					isAdmin: member.role === 'ADMIN'
 				});
 		})

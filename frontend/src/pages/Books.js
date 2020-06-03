@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import SearchUI from '../components/SearchUI';
 import { Table } from 'react-bootstrap';
+import { Edit } from '@material-ui/icons';
 import axios from 'axios';
 
 export default class Books extends Component {
@@ -11,9 +12,11 @@ export default class Books extends Component {
 			loading: false,
 			booksPerPage: 20,
 			currPage: 0,
-			pagesFetched: 0
-		}
+			pagesFetched: 0,
+			canEdit: false
+		};
 		this.fetchBooks = this.fetchBooks.bind(this);
+		this.checkEditPermission = this.checkEditPermission.bind(this);
 	}
 
 	// fetches `limit` rows starting from `offset` row
@@ -46,9 +49,24 @@ export default class Books extends Component {
 			});
 	}
 
+	checkEditPermission() {
+		axios.get('/api/members/checkAdmin')
+			.then(res => {
+				console.log(this.state, res);
+				if (res.data && res.data.isAdmin) {
+					this.setState({
+						canEdit: true
+					});
+				}
+			})
+			.catch(err => {
+				console.log('Error while checking edit permissions');
+			});
+	}
+
 	componentDidMount() {
 		this.fetchBooks(0, this.state.booksPerPage);
-
+		this.checkEditPermission();
 		/*const booksPerPage = this.state.booksPerPage;
 		if (this.state.currPage >= this.state.pagesFetched)
 			this.fetchBooks(this.state.currPage * booksPerPage, booksPerPage);*/
@@ -65,6 +83,7 @@ export default class Books extends Component {
 				<td>{book.author}</td>
 				<td>{book.publisher}</td>
 				<td>{book.year}</td>
+				{this.state.canEdit && <td><a href={`edit/${book.id}`}><Edit /></a></td>}
 			</tr>
 		)));
 		return (
@@ -80,6 +99,7 @@ export default class Books extends Component {
 								<th>Author</th>
 								<th>Publisher</th>
 								<th>Year</th>
+								{this.state.canEdit && <th>Edit</th>}
 							</tr>
 						</thead>
 						<tbody>
