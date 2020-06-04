@@ -79,47 +79,23 @@ router.post('/authenticate', (req, res, next) => {
 		});
 });
 
-router.get('/checkToken', middlewares.authJwt.verifyToken, function(req, res, next) {
+router.get('/checkUser', middlewares.authJwt.verifyUser, function(req, res, next) {
 	res.status(200)
 		.json({
-			success: true,
-			msg: 'Valid token'
+			isUser: true,
+			msg: 'Valid user'
 		});
 });
 
-router.get('/checkAdmin', middlewares.authJwt.verifyToken, function(req, res, next) {
-	const token = req.cookies.token;
-	const decoded = jwt.decode(token);
-	if (!decoded || !decoded.id) {
-		return res.status(401).json({
-			success: false,
-			msg: `Could not decode token`
-		});
-	}
-	Member.findOne({
-		where: {
-			id: decoded.id
-		}
-	})
-		.then(member => {
-			console.log(member);
-			res.status(200)
-				.json({
-					success: true,
-					isAdmin: member.role === 'ADMIN'
-				});
-		})
-		.catch(err => {
-			console.log(err);
-			res.status(500)
-				.json({
-					success: false,
-					msg: err.name
-				});
+router.get('/checkAdmin', middlewares.authJwt.verifyAdmin, function(req, res, next) {
+	res.status(200)
+		.json({
+			isAdmin: true,
+			msg: 'Is an admin'
 		});
 });
 
-router.get('/profile', middlewares.authJwt.verifyToken, function(req, res, next) {
+router.get('/profile', middlewares.authJwt.verifyUser, function(req, res, next) {
 	const token = req.cookies.token;
 	const decoded = jwt.decode(token);
 	if (!decoded || !decoded.id) {

@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 const { Op } = require('sequelize');
 
-router.post('/add', middlewares.authJwt.verifyToken, function(req, res, next) {
+router.post('/add', middlewares.authJwt.verifyUser, function(req, res, next) {
 	const { name, author, publisher, year } = req.body;
 	Book.create({
 		name,
@@ -70,6 +70,58 @@ router.get('/list', function(req, res, next) {
 		.catch(err => {
 			console.log('Some error occurred while fetching books', err);
 			res.sendStatus(500);
+		});
+});
+
+router.patch('/:id', function(req, res, next) {
+	const id = req.params.id;
+	const { name, author, publisher, year } = req.body;
+	console.log({name, author, publisher, year});
+	Book.update({
+		name,
+		author,
+		publisher,
+		year
+	}, {
+		where: {
+			id
+		}
+	})
+		.then(book => {
+			console.log(book);
+			res.status(200)
+				.json({
+					book
+				});
+		})
+		.catch(err => {
+			console.log(err);
+			res.sendStatus(500);
+		});
+});
+
+router.get('/:id', function(req, res, next) {
+	const id = req.params.id;
+	Book.findOne({
+		where: {
+			id
+		}
+	})
+		.then(book => {
+			console.log(book);
+			res.status(200)
+				.json({
+					success: true,
+					book
+				});
+		})
+		.catch(err => {
+			console.log(err);
+			res.status(500)
+				.json({
+					success: false,
+					msg: err.name
+				});
 		});
 });
 
