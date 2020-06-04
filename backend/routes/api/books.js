@@ -91,7 +91,7 @@ router.patch('/:id', function(req, res, next) {
 			console.log(book);
 			res.status(200)
 				.json({
-					book
+					success: true
 				});
 		})
 		.catch(err => {

@@ -21,6 +21,7 @@ export default class Books extends Component {
 
 	// fetches `limit` rows starting from `offset` row
 	fetchBooks(offset, limit) {
+		console.log('fetching books');
 		this.setState({
 			loading: true
 		});
@@ -52,8 +53,7 @@ export default class Books extends Component {
 	checkEditPermission() {
 		axios.get('/api/members/checkAdmin')
 			.then(res => {
-				console.log(this.state, res);
-				if (res.data && res.data.isAdmin) {
+				if (res.status === 200 && res.data && res.data.isAdmin) {
 					this.setState({
 						canEdit: true
 					});
@@ -83,7 +83,7 @@ export default class Books extends Component {
 				<td>{book.author}</td>
 				<td>{book.publisher}</td>
 				<td>{book.year}</td>
-				{this.state.canEdit && <td><a href={`edit/${book.id}`}><Edit /></a></td>}
+				{this.state.canEdit && <td><a href={`${book.id}/edit`}><Edit /></a></td>}
 			</tr>
 		)));
 		return (

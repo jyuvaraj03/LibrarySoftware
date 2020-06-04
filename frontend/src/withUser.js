@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
 
-export default function withAuth(ComponentToProtect) {
+export default function withUser(ComponentToProtect) {
     return class extends Component {
         constructor() {
             super();
@@ -12,9 +12,9 @@ export default function withAuth(ComponentToProtect) {
             };
         }
         componentDidMount() {
-            axios.get('api/members/checkToken')
+            axios.get('/api/members/checkUser')
                 .then(res => {
-                    if (res.status === 200 && res.data.success) {
+                    if (res.data && res.data.isUser) {
                         this.setState({ loading: false });
                     } else {
                         const error = new Error(res.error);
