@@ -45,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
         }
     });
     Member.associate = function(models) {
-        // associations can be defined here
+        Member.hasMany(models.BorrowEvent);
     };
     Member.prototype.isCorrectPassword = function(password, callback) {
         bcrypt.compare(password, this.password, (err, result) => {
