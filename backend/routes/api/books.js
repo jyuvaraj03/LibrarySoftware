@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 const { Op } = require('sequelize');
 
-router.post('/add', middlewares.authJwt.verifyUser, function(req, res, next) {
+router.post('/add', middlewares.authJwt.verifyAdmin, function(req, res, next) {
 	const { name, author, publisher, year } = req.body;
 	Book.create({
 		name,

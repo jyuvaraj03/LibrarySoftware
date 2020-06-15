@@ -8,6 +8,7 @@ var indexRouter = require('./routes/index');
 // var apiRouter = require('./routes/api');
 var membersApiRouter = require('./routes/api/members');
 var booksApiRouter = require('./routes/api/books');
+var borrowApiRouter = require('./routes/api/borrowEvents');
 var models = require('./models/');
 
 var app = express();
@@ -21,6 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/api/members/', membersApiRouter);
 app.use('/api/books/', booksApiRouter);
+app.use('/api/borrow', borrowApiRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -38,7 +40,7 @@ app.use(function(err, req, res, next) {
     res.render('error');
 });
 
-models.sequelize.sync(/*{ force: true }*/).then(() => {
+models.sequelize.sync({ force: true }).then(() => {
     app.listen(8080, () => {
         console.log(`App listening on PORT ${8080}`);
     });

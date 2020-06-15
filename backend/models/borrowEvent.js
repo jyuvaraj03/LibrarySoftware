@@ -1,22 +1,23 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-    console.log(sequelize.models);
     const BorrowEvent = sequelize.define('BorrowEvent', {
         MemberId: {
-          type: DataTypes.INTEGER,
-          references: {
-            model: 'Members',
-            key: 'id'
-          },
-          onDelete: 'RESTRICT'
+            type: DataTypes.INTEGER,
+            references: {
+                model: 'Members',
+                key: 'id'
+            },
+            onDelete: 'RESTRICT',
+            unique: 'Member_Book_Unique'
         },
         BookId: {
-          type: DataTypes.INTEGER,
-          references: {
-            model: 'Books',
-            key: 'id'
-          },
-          onDelete: 'RESTRICT',
+            type: DataTypes.INTEGER,
+            references: {
+                model: 'Books',
+                key: 'id'
+            },
+            onDelete: 'RESTRICT',
+            unique: 'Member_Book_Unique'
         },
         borrowedDate: {
             type: DataTypes.DATE,
@@ -33,21 +34,11 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             defaultValue: 0
         },
-        isReturned: {
-            type: DataTypes.BOOLEAN,
-            allowNull: false,
-            defaultValue: false
-        }
-    }, {
-        paranoid: true
-    });
+    }, {});
+
     BorrowEvent.associate = function(models) {
-        BorrowEvent.belongsTo(models.Book, {
-            foreignKey: 'BookId'
-        });
-        BorrowEvent.belongsTo(models.Member, {
-            foreignKey: 'MemberId'
-        });
+        BorrowEvent.belongsTo(models.Book);
+        BorrowEvent.belongsTo(models.Member);
     }
     return BorrowEvent;
 };
